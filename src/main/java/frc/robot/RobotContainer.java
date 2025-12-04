@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -48,6 +50,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Vision vision;
+  private final intake intake;
 
   // Controller
   // private final CommandXboxController controller = new CommandXboxController(0);
@@ -72,6 +75,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
+        intake = new intake();
 
         break;
 
@@ -89,6 +93,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
+        intake = new intake();
         break;
 
       default:
@@ -105,6 +110,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
+        intake = new intake();
         break;
     }
 
@@ -167,6 +173,10 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     flightcontroller.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // Intake Controls
+    flightcontroller.button(6).onTrue(new InstantCommand(intake::runintake));
+    flightcontroller.button(6).onFalse(new InstantCommand(intake::stopintake));
 
     // Reset gyro to 0° when B button is pressed
     flightcontroller
