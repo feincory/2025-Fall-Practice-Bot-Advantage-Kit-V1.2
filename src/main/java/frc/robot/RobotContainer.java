@@ -24,11 +24,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -51,6 +53,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
   private final intake intake;
+  private final Shooter shooter;
 
   // Controller
   // private final CommandXboxController controller = new CommandXboxController(0);
@@ -76,6 +79,7 @@ public class RobotContainer {
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         intake = new intake();
+        shooter = new Shooter();
 
         break;
 
@@ -94,6 +98,7 @@ public class RobotContainer {
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         intake = new intake();
+        shooter = new Shooter();
         break;
 
       default:
@@ -111,6 +116,7 @@ public class RobotContainer {
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         intake = new intake();
+        shooter = new Shooter();
         break;
     }
 
@@ -175,8 +181,21 @@ public class RobotContainer {
     flightcontroller.button(2).onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Intake Controls
-    flightcontroller.button(6).onTrue(new InstantCommand(intake::runintake));
+    // flightcontroller.button(6).onTrue(new InstantCommand(intake::runintake));
+
+    flightcontroller
+        .button(6)
+        .onTrue(new InstantCommand(() -> intake.runintakevariable(flightcontroller.getRawAxis(7))));
+
     flightcontroller.button(6).onFalse(new InstantCommand(intake::stopintake));
+
+    // Shooter Controls
+    flightcontroller
+        .button(4)
+        .whileTrue(
+            new RunCommand(() -> shooter.runshootervariable(flightcontroller.getRawAxis(7))));
+
+    flightcontroller.button(4).onFalse(new InstantCommand(shooter::stopshooter));
 
     // Reset gyro to 0° when B button is pressed
     flightcontroller

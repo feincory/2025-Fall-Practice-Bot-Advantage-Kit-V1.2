@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "Cm and s"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Run Shooter"
+            "pathName": "Cm to s"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Cm to s"
           }
         }
       ]

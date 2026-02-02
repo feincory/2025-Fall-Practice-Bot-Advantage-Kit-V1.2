@@ -19,7 +19,7 @@ public class intake extends SubsystemBase {
 
   public intake() {
 
-    intakeConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.2;
+    intakeConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 1.5;
     intakeMotor.getConfigurator().apply(intakeConfig);
     intakeMotor.setNeutralMode(NeutralModeValue.Coast);
   }
@@ -31,6 +31,10 @@ public class intake extends SubsystemBase {
 
   public void runintake() {
     intakeMotor.set(1);
+  }
+
+  public void runintakevariable(double speed) {
+    intakeMotor.set(speed);
   }
 
   public void stopintake() {
